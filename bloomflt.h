@@ -22,4 +22,14 @@ int bfilter_check(const bloom_filter* bFilter, const char *key);
 // !!!确认key在集合中才能调用bfilter_del()函数!!!
 void bfilter_del(const bloom_filter* bFilter, const char *key);
 
+// 字符串hash函数
+unsigned int SDBMHash (const char *str);
+unsigned int RSHash (const char *str);
+unsigned int JSHash (const char *str);
+unsigned int PJWHash (const char *str);
+unsigned int ELFHash (const char *str);
+unsigned int BKDRHash (const char *str);
+unsigned int DJBHash (const char *str);
+unsigned int APHash (const char *str);
+
 #endif

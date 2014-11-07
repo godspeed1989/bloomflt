@@ -26,23 +26,16 @@ void destroy_bfilter(bloom_filter* bFilter)
 }
 
 // Computes our hashes
-static void bfilter_compute_hashes(const char *key, unsigned long *hashes)
+static void bfilter_compute_hashes(const char *key, unsigned int *hashes)
 {
-    unsigned int i;
-    // Get the length of the key
-    unsigned long len = (unsigned long)strlen(key);
-
-    hashes[0] = hashes[1] = hashes[2] = hashes[3] = 0;
-    for (i = 0; i < len; i++)
-    {
-        hashes[0] += key[i]; hashes[0] &= 0xffff;
-        hashes[1] += key[i]; hashes[1] &= 0xfffff;
-        hashes[2] += key[i]; hashes[2] &= 0xffffff;
-        hashes[3] += key[i]; hashes[3] &= 0xfffffff;
-    }
-
-    for (i = 4; i < NUM_HASH; i++)
-        hashes[i] = hashes[1] + ((i * hashes[3]) % 18446744073709551557U);
+    hashes[0] = SDBMHash (key);
+    hashes[1] = RSHash (key);
+    hashes[2] = JSHash (key);
+    hashes[3] = PJWHash (key);
+    hashes[4] = ELFHash (key);
+    hashes[5] = BKDRHash (key);
+    hashes[6] = DJBHash (key);
+    hashes[7] = APHash (key);
 }
 
 #define COMPUTE_HASHES(key, hashes)                 \
@@ -57,7 +50,7 @@ static void bfilter_compute_hashes(const char *key, unsigned long *hashes)
 void bfilter_add(const bloom_filter* bFilter, const char *key)
 {
     unsigned int i;
-    unsigned long hashes[NUM_HASH];
+    unsigned int hashes[NUM_HASH];
     COMPUTE_HASHES(key, hashes);
     for (i = 0; i < NUM_HASH; i++)
         if (bFilter->filter[hashes[i]] != (filter_t)-1)
@@ -70,7 +63,7 @@ void bfilter_add(const bloom_filter* bFilter, const char *key)
 int bfilter_check(const bloom_filter* bFilter, const char *key)
 {
     unsigned int i;
-	unsigned long hashes[NUM_HASH];
+	unsigned int hashes[NUM_HASH];
     COMPUTE_HASHES(key, hashes);
     for (i = 0; i < NUM_HASH; i++)
         if (bFilter->filter[hashes[i]] == 0)
@@ -82,7 +75,7 @@ int bfilter_check(const bloom_filter* bFilter, const char *key)
 void bfilter_del(const bloom_filter* bFilter, const char *key)
 {
     unsigned int i;
-    unsigned long hashes[NUM_HASH];
+    unsigned int hashes[NUM_HASH];
     COMPUTE_HASHES(key, hashes);
     for (i = 0; i < NUM_HASH; i++)
         if (bFilter->filter[hashes[i]] != 0)

@@ -3,7 +3,7 @@ CFLAGS = -O3 -Wall -Werror
 
 all: test
 
-test: test.o bloomflt.o
+test: test.o bloomflt.o hash.o
 	$(CC) $+ -o test
 
 %.o: %.c
