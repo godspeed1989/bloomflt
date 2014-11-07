@@ -4,7 +4,7 @@
 #include <assert.h>
 
 #define NUM_HASH    8
-#include <stdio.h>
+
 bloom_filter* create_bfilter(unsigned long size)
 {
     unsigned long alloc_size;
