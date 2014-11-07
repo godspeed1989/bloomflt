@@ -1,7 +1,13 @@
 #ifndef __BLOOMFLT_H__
 #define __BLOOMFLT_H__
 
+#define BINARY  1
+
+#if BINARY
+typedef unsigned char filter_t;
+#else
 typedef unsigned int filter_t;
+#endif
 
 typedef struct _bloom_filter
 {
@@ -20,7 +26,9 @@ int bfilter_check(const bloom_filter* bFilter, const char *key);
 
 // 删除
 // !!!确认key在集合中才能调用bfilter_del()函数!!!
+#if !BINARY
 void bfilter_del(const bloom_filter* bFilter, const char *key);
+#endif
 
 // 字符串hash函数
 unsigned int SDBMHash (const char *str);
