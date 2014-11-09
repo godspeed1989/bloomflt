@@ -36,6 +36,8 @@ int main()
     bloom_filter *flt;
     flt = create_bfilter(NUM_BUCKETS);
 
+    printf("BINARY: %d\n", BINARY);
+
     // generate content and insert into filter
     srand((unsigned int)time(NULL));
     for (i = 0; i < NUM_ITEMS; i++)
